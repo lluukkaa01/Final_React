@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Planner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <style>
+        body { transition: background-color 0.3s, color 0.3s; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+        .dark .glass-panel {
+            background: rgba(15, 23, 42, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+    </style>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-100 via-slate-50 to-teal-50 dark:from-slate-900 dark:via-slate-800 dark:to-indigo-950 text-slate-800 dark:text-slate-100 min-h-screen">
+    
+    <div id="root"></div>
+
+    <script type="text/babel" src="./src/context.js"></script>
+    <script type="text/babel" src="./src/navbar.js"></script>
+    <script type="text/babel" src="./src/home.js"></script>
+    <script type="text/babel" src="./src/forecast.js"></script>
+    <script type="text/babel" src="./src/saved.js"></script>
+
+    <script type="text/babel">
+        function App() {
+            const AppProvider = window.AppProvider;
+            const useApp = window.useApp;
+            const Navbar = window.Navbar;
+            const Home = window.Home;
+            const Forecast = window.Forecast;
+            const SavedCities = window.SavedCities;
+
+            if (!AppProvider || !useApp || !Navbar || !Home || !Forecast || !SavedCities) {
+                return (
+                    <div className="flex items-center justify-center min-h-screen font-sans text-slate-500">
+                        <div className="animate-pulse">Loading SkyGlass App Modules...</div>
+                    </div>
+                );
+            }
+
+            return (
+                <AppProvider>
+                    <MainContainer />
+                </AppProvider>
+            );
+        }
+
+        function MainContainer() {
+            const { page, currentForecastCity } = window.useApp();
+            const Navbar = window.Navbar;
+            const Home = window.Home;
+            const Forecast = window.Forecast;
+            const SavedCities = window.SavedCities;
+
+            return (
+                <div className="min-h-screen flex flex-col">
+                    <Navbar />
+                    <main className="flex-grow container mx-auto px-4 py-6 max-w-6xl">
+                        {page === 'home' && <Home />}
+                        {page === 'saved' && <SavedCities />}
+                        {page === 'forecast' && <Forecast city={currentForecastCity} />}
+                    </main>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
